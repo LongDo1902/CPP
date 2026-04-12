@@ -1,4 +1,5 @@
 #include "fraction.hpp"
+#include <ostream>
 
 fraction
 fraction::operator*(fraction fract)
@@ -53,3 +54,17 @@ fraction::Simplify()
     num = num / gcb;
     den = den / gcb;
 }
+
+fraction::fraction()
+{
+    num = 0;
+    den = 0;
+}
+
+fraction::fraction(int _num, int _den)
+{
+    num = _num;
+    den = _den;
+}
+
+fraction::~fraction() { std::cout << "Object is deleted!"; }

@@ -10,4 +10,9 @@ class fraction {
     fraction operator+(fraction fract);
 
     void Simplify();
+
+    fraction();
+    fraction(int _num, int _den);
+
+    ~fraction();
 };
