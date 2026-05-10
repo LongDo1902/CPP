@@ -1,0 +1,156 @@
+#include <iomanip>
+#include <iostream>
+#include <stdint.h>
+#include <stdio.h>
+
+using namespace std;
+
+void
+Split_Upper_Lower(uint16_t decimal, uint8_t *upper, uint8_t *lower)
+{
+    if (!upper || !lower)
+        return;
+    *upper = (uint8_t)((decimal >> 8U) & 0xFF);
+    *lower = (uint8_t)(decimal & 0xFF);
+}
+
+int
+main()
+{
+    uint16_t decimal = 1234;
+    uint8_t  upper   = 0U;
+    uint8_t  lower   = 0U;
+
+    Split_Upper_Lower(decimal, &upper, &lower);
+
+    cout << "Input Decimal: " << decimal << endl;
+    cout << "Corresponding Hexadecimal: 0x" << hex << setw(4) << setfill('0') << uppercase
+         << decimal << endl;
+
+    cout << "Upper: 0x" << hex << setw(2) << setfill('0') << (int)upper << endl;
+    cout << "Lower: 0x" << hex << setw(2) << setfill('0') << (int)lower << endl;
+
+    return 0;
+}
+
+#include <cmath>
+#include <complex>
+#include <initializer_list>
+#include <iostream>
+#include <stdio.h>
+
+using namespace std;
+
+class QuadraticSolver {
+  private:
+    double _a, _b, _c;
+
+    inline double
+    Get_Discriminant() const
+    {
+        double D = (_b * _b) - (4 * _a * _c);
+        return D;
+    };
+
+  public:
+    /**
+     * @brief   Constructor
+     */
+    QuadraticSolver(double a, double b, double c) : _a(a), _b(b), _c(c) {}
+
+
+    /**
+     * @brief   Helper checks if there are complex roots
+     */
+    bool
+    Is_Complex() const
+    {
+        return Get_Discriminant() < 0.0;
+    }
+
+
+    /**
+     * @brief   Quadratic Solver for real roots only
+     * @return  "true" on success
+     *          "false" on NULL, not quadratic function, there are complex roots
+     */
+    bool
+    Quadratic_Solver(double *x1, double *x2)
+    {
+        if (!x1 || !x2)
+            return false;
+
+        // Check if _a == 0 ? It is quadratic : Otherwise not
+        if (_a == 0.0)
+            return false;
+
+        double D = Get_Discriminant();
+
+        // Check if D > 0 ? There are two real roots : There is one repeated root
+        if (D >= 0.0) {
+            *x1 = (double)(-_b + sqrt(D)) / (2.0 * _a);
+            *x2 = (double)(-_b - sqrt(D)) / (2.0 * _a);
+        }
+
+        else { // Complex roots
+            return false;
+        }
+
+        return true;
+    }
+
+
+    /**
+     * @brief   Quadratic Solver for complex roots (real roots are also available)
+     * @return  "true" on success
+     *          "false" on NULL OR not a quadratic function
+     */
+    bool
+    Quadratic_Solver(complex<double> *x1, complex<double> *x2)
+    {
+        if (!x1 || !x2) {
+            return false;
+        }
+
+        if (_a == 0.0)
+            return false;
+
+        double D = Get_Discriminant();
+
+        if (D >= 0.0) {
+            *x1 = (double)(-_b + sqrt(D)) / (2.0 * _a);
+            *x2 = (double)(-_b - sqrt(D)) / (2.0 * _a);
+        }
+
+        else {
+            *x1 = complex<double>(-_b / (2.0 * _a), sqrt(-D) / (2.0 * _a));
+            *x2 = complex<double>(-_b / (2.0 * _a), -sqrt(-D) / (2.0 * _a));
+        }
+
+        return true;
+    }
+};
+
+
+
+int
+main()
+{
+    QuadraticSolver solver(1.0, -5.0, -6.0);
+
+    if (solver.Is_Complex()) {
+        complex<double> x1, x2;
+
+        if (solver.Quadratic_Solver(&x1, &x2)) {
+            cout << "Complex roots: " << x1 << " and " << x2 << endl;
+        }
+    }
+
+    else {
+        double x1 = 0.0, x2 = 0.0;
+
+        if (solver.Quadratic_Solver(&x1, &x2)) {
+            cout << "Real root(s): " << x1 << " and " << x2 << endl;
+        }
+    }
+}
