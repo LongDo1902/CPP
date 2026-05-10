@@ -1,6 +1,7 @@
 {
     "editor.formatOnSave": true,
     "editor.formatOnSaveMode": "file",
+    "chat.disableAIFeatures": true,
     "[c]": {
         "editor.defaultFormatter": "ms-vscode.cpptools"
     },
