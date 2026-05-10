@@ -1,117 +1,42 @@
-#include <cmath>
-#include <complex>
-#include <initializer_list>
 #include <iostream>
 #include <stdio.h>
+#include <string>
 
 using namespace std;
 
-class QuadraticSolver {
-  private:
-    double _a, _b, _c;
+std::string incoming_server_data = R"(HTTP1.1 200 OK 
+{
+    "light": "on",
+    "fan": "off",
+    "motor": "off"
+})";
 
-    inline double
-    Get_Discriminant() const
+class ProcessData {
+  private:
+  public:
+};
+
+class IoT : ProcessData {
+  private:
+    enum class Device_State_t
     {
-        double D = (_b * _b) - (4 * _a * _c);
-        return D;
+        OFF = 0,
+        ON  = 1,
     };
 
   public:
-    /**
-     * @brief   Constructor
-     */
-    QuadraticSolver(double a, double b, double c) : _a(a), _b(b), _c(c) {}
-
-
-    /**
-     * @brief   Helper checks if there are complex roots
-     */
-    bool
-    Is_Complex() const
+    // Output handle
+    typedef struct
     {
-        return Get_Discriminant() < 0.0;
-    }
-
-
-    /**
-     * @brief   Quadratic Solver for real roots only
-     * @return  "true" on success
-     *          "false" on NULL, not quadratic function, there are complex roots
-     */
-    bool
-    Quadratic_Solver(double *x1, double *x2)
-    {
-        // Check NULL
-        if (!x1 || !x2)
-            return false;
-
-        // Check if _a == 0 ? It is quadratic : Otherwise not
-        if (_a == 0.0)
-            return false;
-
-        double D = Get_Discriminant();
-
-        // Check if D > 0 ? There are two real roots : There is one repeated root
-        if (D >= 0.0) {
-            *x1 = (double)(-_b + sqrt(D)) / (2.0 * _a);
-            *x2 = (double)(-_b - sqrt(D)) / (2.0 * _a);
-        }
-
-        else { // Complex roots
-            return false;
-        }
-
-        return true;
-    }
-
-
-
-    bool
-    Quadratic_Solver(complex<double> *x1, complex<double> *x2)
-    {
-        // Check NULL
-        if (!x1 || !x2) {
-            return false;
-        }
-
-        if (_a == 0.0)
-            return false;
-
-        double D = Get_Discriminant();
-
-        if (D >= 0.0) {
-            *x1 = (double)(-_b + sqrt(D)) / (2.0 * _a);
-            *x2 = (double)(-_b - sqrt(D)) / (2.0 * _a);
-        }
-
-        else {
-            *x1 = complex<double>(-_b / (2.0 * _a), sqrt(-D) / (2.0 * _a));
-            *x2 = complex<double>(-_b / (2.0 * _a), -sqrt(-D) / (2.0 * _a));
-        }
-
-        return true;
-    }
+        char light;
+        char fan;
+        char motor
+    } SmartHome_t;
 };
 
 int
 main()
 {
-    QuadraticSolver solver(1.0, -5.0, -6.0);
 
-    if (solver.Is_Complex()) {
-        complex<double> x1, x2;
-
-        if (solver.Quadratic_Solver(&x1, &x2)) {
-            cout << "Complex roots: " << x1 << " and " << x2 << endl;
-        }
-    }
-
-    else {
-        double x1 = 0.0, x2 = 0.0;
-
-        if (solver.Quadratic_Solver(&x1, &x2)) {
-            cout << "Real root(s): " << x1 << " and " << x2 << endl;
-        }
-    }
+    return 0;
 }
